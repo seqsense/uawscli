@@ -1,0 +1,27 @@
+builds:
+  - id: uaws-ecr-get-login-password
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/uaws-ecr-get-login-password/
+    binary: uaws-ecr-get-login-password
+    ldflags:
+      - "-s -w"
+    hooks:
+      post:
+        - upx "{{ .Path }}"
+archives:
+  - builds:
+      - uaws-ecr-get-login-password
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: 'checksums.txt'
