@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
@@ -28,5 +30,16 @@ func main() {
 		fmt.Fprint(os.Stderr, "error: no authorization data is returned\n")
 		return
 	}
-	fmt.Print(*res.AuthorizationData[0].AuthorizationToken)
+	userPass, err := base64.StdEncoding.DecodeString(*res.AuthorizationData[0].AuthorizationToken)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: failed to decode authorization data: %v\n", err)
+		return
+	}
+
+	pass := strings.Split(string(userPass), ":")
+	if len(pass) != 2 {
+		fmt.Fprint(os.Stderr, "error: invalid number of fields of user:pass is returned")
+		return
+	}
+	fmt.Println(pass[1])
 }
