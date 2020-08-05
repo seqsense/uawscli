@@ -62,7 +62,6 @@ ext=
 case $(uname -s) in
   Linux)
     os=linux
-    ext=.tar.gz
     ;;
   *)
     echo "error: unsupported OS" >&2
@@ -115,12 +114,7 @@ mkdir -p ${install_dir}
 
 for dl in ${downloads}
 do
-  tmpdir=$(mktemp -d)
   echo "downloading: ${url}"
-  curl -sL ${url} | tar xzf - -C ${tmpdir}/
-
-  rm -rf ${tmpdir}/README* ${tmpdir}/LICENSE*
-  echo " installing: $(echo $(ls -1 ${tmpdir}))"
-  cp ${tmpdir}/* ${install_dir}
-  rm -rf ${tmpdir}
+  file=$(echo $url | sed -n "s|.*/\([^/]*\)_${os}_${arch}${ext}$|\1|p")
+  curl -sL ${url} -o {install_dir}/${file}
 done

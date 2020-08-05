@@ -19,9 +19,6 @@ builds:
 archives:
   - builds:
       - uaws-ecr-get-login-password
-    format: tar.gz
-    format_overrides:
-      - goos: windows
-        format: zip
+    format: binary
 checksum:
   name_template: 'checksums.txt'
