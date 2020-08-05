@@ -11,5 +11,5 @@ $ curl -sL https://raw.githubusercontent.com/at-wat/gh-pr-comment/master/install
 
 # Install specific version of uaws-ecr-get-login-password under /path/to/bin
 $ curl -sL https://raw.githubusercontent.com/at-wat/gh-pr-comment/master/install.sh \
-  | sh -s -v v0.5.0 -i /path/to/bin ecr-get-login-password
+  | sh -s -v v0.0.0 -i /path/to/bin ecr-get-login-password
 ```

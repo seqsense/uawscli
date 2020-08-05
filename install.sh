@@ -94,7 +94,13 @@ fi
 
 urls=$(echo "${rel}" \
   | sed -n 's/.*"browser_download_url":\s*"\([^"]*\)"/\1/p' \
-  | grep "_${os}_${arch}${ext}$")
+  | grep "_${os}_${arch}${ext}$" || true)
+
+if [ -z "${urls}" ]
+then
+  echo "error: version ${version} not found" >&2
+  exit 1
+fi
 
 downloads=
 for target in ${install_targets}
@@ -114,7 +120,8 @@ mkdir -p ${install_dir}
 
 for dl in ${downloads}
 do
+  file=$(echo $url | sed -n "s|.*/\([^/]*\)_[0-9\.]\+_${os}_${arch}${ext}$|\1|p")
   echo "downloading: ${url}"
-  file=$(echo $url | sed -n "s|.*/\([^/]*\)_${os}_${arch}${ext}$|\1|p")
-  curl -sL ${url} -o {install_dir}/${file}
+  curl -sL ${url} -o ${install_dir}/${file}
+  chmod +x ${install_dir}/${file}
 done
