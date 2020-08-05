@@ -100,7 +100,7 @@ urls=$(echo "${rel}" \
 downloads=
 for target in ${install_targets}
 do
-  url=$(echo "${urls}" | grep "/${target}[^/]\+$" || true)
+  url=$(echo "${urls}" | grep "/uaws-${target}[^/]\+$" || true)
 
   if [ -n "$(echo ${url})" ]
   then
