@@ -1,0 +1,194 @@
+#!/bin/sh
+
+set -eu
+
+arch=
+case $(uname -p) in
+  x86_64)
+    arch=amd64
+    ;;
+  *)
+    echo "error: unsupported arch" >&2
+    exit 1
+    ;;
+esac
+
+os=
+ext=
+case $(uname -s) in
+  Linux)
+    os=linux
+    ;;
+  *)
+    echo "error: unsupported OS" >&2
+    exit 1
+    ;;
+esac
+
+bin_dir=$(cd $(dirname $0) && pwd)
+lib_dir=$(cd ${bin_dir}/.. && pwd)/lib/uawscli
+
+mkdir -p ${lib_dir}
+
+function uaws_install() {
+  api_auth=
+  if [ -n "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}" ]
+  then
+    api_auth="-H \"Authorization: token ${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}\""
+  fi
+
+  gh_api_base=${GITHUB_API_URL_BASE:-https://api.github.com}
+  slug=seqsense/uawscli
+
+  version=$1
+  rel=
+  if [ ${version} = "latest" ]
+  then
+    rel=$(eval curl \
+      ${api_auth} \
+      -s --retry 4 \
+      ${gh_api_base}/repos/${slug}/releases/latest)
+  else
+    rel=$(eval curl \
+      ${api_auth} \
+      -s --retry 4 \
+      ${gh_api_base}/repos/${slug}/releases/tags/${version})
+  fi
+
+  urls=$(echo "${rel}" \
+    | sed -n 's/.*"browser_download_url":\s*"\([^"]*\)"/\1/p' \
+    | grep "_${os}_${arch}${ext}$" || true)
+  if [ -z "${urls}" ]
+  then
+    echo "error: failed to fetch released binary list" >&2
+    exit 1
+  fi
+
+  echo $@
+  for query in ${@:2}
+  do
+    found=false
+    for url in ${urls}
+    do
+      cmd=$(echo $url | sed -n "s|.*/\([^/]*\)_[0-9\.]\+_${os}_${arch}${ext}$|\1|p")
+      if echo ${query} | grep -q -e "^${cmd}"
+      then
+        file=$(echo $url | sed -n 's|.*/\([^/]\+\)$|\1|p')
+        if [ ! -f ${lib_dir}/${file} ]
+        then
+          echo "info: installing ${url}" >&2
+          curl -sL ${url} -f -o ${lib_dir}/${file}
+          chmod +x ${lib_dir}/${file}
+          rm -f ${bin_dir}/${cmd}
+          ln -s ${lib_dir}/${file} ${bin_dir}/${cmd}
+        else
+          echo "info: ${url} is up-to-date" >&2
+        fi
+        found=true
+        break
+      fi
+    done
+    if ! ${found}
+    then
+      echo "error: ${query} not found" >&2
+      exit 1
+    fi
+  done
+}
+
+installed_cmds=$(ls -1 ${lib_dir} \
+  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/")
+
+case ${1:-} in
+  upgrade)
+    uaws_install latest ${installed_cmds}
+    exit 0
+    ;;
+  install)
+    shift
+
+    install_targets=
+    install_prefix="${HOME}/.local"
+    version=latest
+    while [ $# -gt 0 ]
+    do
+      case $1 in
+        -v)
+          shift
+          if [ $# -lt 1 ]
+          then
+            echo "error: -v must be followed by a version" >&2
+            exit 1
+          fi
+          version=$1
+          ;;
+        -i)
+          shift
+          if [ $# -lt 1 ]
+          then
+            echo "error: -i must be followed by a path" >&2
+            exit 1
+          fi
+          install_prefix=$1
+          ;;
+        -*)
+          echo "error: unknown option $1" >&2
+          exit 1
+          ;;
+        *)
+          install_targets="${install_targets} uaws-$1"
+          ;;
+      esac
+      shift
+    done
+
+    if [ -z "${install_targets}" ]
+    then
+      echo "usage: $(basename $0) install [option...] install_targets" >&2
+      echo "option:" >&2
+      echo "  -v VERSION    install specific VERSION of uawscli" >&2
+      echo "  -i DIR        install prefix DIR (default: ${install_prefix})" >&2
+      exit 1
+    fi
+
+    bin_dir=${install_prefix}/bin
+    lib_dir=${install_prefix}/lib/uawscli
+    
+    uaws_install ${version} ${install_targets}
+    exit 0
+    ;;
+  "")
+    echo "usage: $(basename $0) sub-command ..." >&2
+    echo "installed sub-commands:" >&2
+    echo ${installed_cmds} | xargs -n1 echo "  "
+    exit 0
+    ;;
+esac
+
+selected_cmd=
+for cmd in ${installed_cmds}
+do
+  nquery=1
+  query="uaws-$@"
+
+  while echo ${query} | grep -q -e "^\S\+\s"
+  do
+    query=$(echo ${query} | sed "s/\s/-/")
+    nquery=$(expr ${nquery} + 1)
+    if echo ${query} | grep -q -e "^${cmd}"
+    then
+      selected_cmd=${cmd}
+      shift ${nquery}
+      break
+    fi
+  done
+done
+
+if [ -z "${selected_cmd}" ]
+then
+  echo "warn: requested command is not installed" >&2
+  # not found, try to install
+  uaws_install latest uaws-$(echo "$@" | sed "s/\s/-/g" | head -n1)
+fi
+
+exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) $@
