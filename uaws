@@ -136,7 +136,7 @@ case ${1:-} in
           exit 1
           ;;
         *)
-          install_targets="${install_targets} $1"
+          install_targets="${install_targets} uaws-$1"
           ;;
       esac
       shift
