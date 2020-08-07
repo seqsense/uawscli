@@ -64,8 +64,8 @@ uaws_install() {
     exit 1
   fi
 
-  echo $@
-  for query in ${@:2}
+  shift
+  for query in $@
   do
     found=false
     for url in ${urls}
