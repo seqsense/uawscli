@@ -34,3 +34,5 @@ jobs:
           which uaws-ecr-get-login-password
           test -L $(which uaws-ecr-get-login-password)
           test -x $(realpath $(which uaws-ecr-get-login-password))
+      - name: Check upgrade
+        run: ./uaws upgrade
