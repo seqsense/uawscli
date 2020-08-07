@@ -1,0 +1,38 @@
+name: script test
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  install.sh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install uaws-ecr-get-login-password
+        run: ./install.sh ecr-get-login-password
+      - name: Check installed command
+        run: |
+          export PATH=${PATH}:${HOME}/.local/bin
+          which uaws-ecr-get-login-password
+          test -L $(which uaws-ecr-get-login-password)
+          test -x $(realpath $(which uaws-ecr-get-login-password))
+  uaws-install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install ecr-get-login-password subcommand
+        run: ./uaws install ecr-get-login-password
+      - name: Check installed command
+        run: |
+          export PATH=${PATH}:${HOME}/.local/bin
+          which uaws-ecr-get-login-password
+          test -L $(which uaws-ecr-get-login-password)
+          test -x $(realpath $(which uaws-ecr-get-login-password))
+      - name: Check upgrade
+        run: ./uaws upgrade
