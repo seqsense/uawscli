@@ -28,9 +28,10 @@ esac
 bin_dir=$(cd $(dirname $0) && pwd)
 lib_dir=$(cd ${bin_dir}/.. && pwd)/lib/uawscli
 
-mkdir -p ${lib_dir}
-
 uaws_install() {
+  mkdir -p ${lib_dir}
+  mkdir -p ${bin_dir}
+
   api_auth=
   if [ -n "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN:-}}" ]
   then
