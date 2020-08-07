@@ -19,7 +19,7 @@ jobs:
         run: |
           export PATH=${PATH}:${HOME}/.local/bin
           which uaws-ecr-get-login-password
-          test -l $(which uaws-ecr-get-login-password)
+          test -L $(which uaws-ecr-get-login-password)
           test -x $(realpath $(which uaws-ecr-get-login-password))
   uaws-install:
     runs-on: ubuntu-latest
@@ -32,5 +32,5 @@ jobs:
         run: |
           export PATH=${PATH}:${HOME}/.local/bin
           which uaws-ecr-get-login-password
-          test -l $(which uaws-ecr-get-login-password)
+          test -L $(which uaws-ecr-get-login-password)
           test -x $(realpath $(which uaws-ecr-get-login-password))
