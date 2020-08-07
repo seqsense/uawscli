@@ -17,6 +17,7 @@ jobs:
         run: ./install.sh ecr-get-login-password
       - name: Check installed command
         run: |
+          export PATH=${PATH}:${HOME}/.local/bin
           which uaws-ecr-get-login-password
           test -l $(which uaws-ecr-get-login-password)
           test -x $(realpath $(which uaws-ecr-get-login-password))
@@ -29,6 +30,7 @@ jobs:
         run: ./uaws install ecr-get-login-password
       - name: Check installed command
         run: |
+          export PATH=${PATH}:${HOME}/.local/bin
           which uaws-ecr-get-login-password
           test -l $(which uaws-ecr-get-login-password)
           test -x $(realpath $(which uaws-ecr-get-login-password))
