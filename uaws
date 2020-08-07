@@ -32,7 +32,7 @@ mkdir -p ${lib_dir}
 
 uaws_install() {
   api_auth=
-  if [ -n "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}" ]
+  if [ -n "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN:-}}" ]
   then
     api_auth="-H \"Authorization: token ${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}\""
   fi
