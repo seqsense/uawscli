@@ -29,16 +29,21 @@ bin_dir=$(cd $(dirname $0) && pwd)
 lib_dir=$(cd ${bin_dir}/.. && pwd)/lib/uawscli
 
 get_download_urls() {
-  api_auth=
-  if [ -n "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN:-}}" ]
+  version=$1
+
+  if [ -z "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN:-}}" ]
   then
-    api_auth="-H \"Authorization: token ${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}\""
+    # Fallback to use download URL list on gh-pages
+    curl -s --retry 4 \
+      https://seqsense.github.io/uawscli/releases/${version}
+    exit 0
   fi
+
+  api_auth="-H \"Authorization: token ${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}\""
 
   gh_api_base=${GITHUB_API_URL_BASE:-https://api.github.com}
   slug=seqsense/uawscli
 
-  version=$1
   ep=
   if [ ${version} = "latest" ]
   then
