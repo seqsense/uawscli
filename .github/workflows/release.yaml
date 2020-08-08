@@ -33,10 +33,13 @@ jobs:
 
           mkdir -p releases
           ./uaws get_download_urls ${tag} > releases/${tag}
-          ./uaws get_download_urls latest > releases/latest
+          if [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          then
+            ./uaws get_download_urls latest > releases/latest
+          fi
 
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add releases
-          git commit -m "Update releases"
+          git commit -m "Update releases ${tag} information"
           git push origin gh-pages
