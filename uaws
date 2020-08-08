@@ -28,37 +28,42 @@ esac
 bin_dir=$(cd $(dirname $0) && pwd)
 lib_dir=$(cd ${bin_dir}/.. && pwd)/lib/uawscli
 
-uaws_install() {
-  mkdir -p ${lib_dir}
-  mkdir -p ${bin_dir}
+get_download_urls() {
+  version=$1
 
-  api_auth=
-  if [ -n "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN:-}}" ]
+  if [ -z "${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN:-}}" ]
   then
-    api_auth="-H \"Authorization: token ${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}\""
+    # Fallback to use download URL list on gh-pages if token is not available.
+    # API access from CI services usually fails due to rate limit.
+    curl -s --retry 4 \
+      https://seqsense.github.io/uawscli/releases/${version}
+    exit 0
   fi
+
+  api_auth="-H \"Authorization: token ${GITHUB_TOKEN:-${TRAVIS_BOT_GITHUB_TOKEN}}\""
 
   gh_api_base=${GITHUB_API_URL_BASE:-https://api.github.com}
   slug=seqsense/uawscli
 
-  version=$1
-  rel=
+  ep=
   if [ ${version} = "latest" ]
   then
-    rel=$(eval curl \
-      ${api_auth} \
-      -s --retry 4 \
-      ${gh_api_base}/repos/${slug}/releases/latest)
+    ep=latest
   else
-    rel=$(eval curl \
+    ep=tags/${version}
+  fi
+  eval curl \
       ${api_auth} \
       -s --retry 4 \
-      ${gh_api_base}/repos/${slug}/releases/tags/${version})
-  fi
+      ${gh_api_base}/repos/${slug}/releases/${ep} \
+    | sed -n 's/.*"browser_download_url":\s*"\([^"]*\)"/\1/p'
+}
 
-  urls=$(echo "${rel}" \
-    | sed -n 's/.*"browser_download_url":\s*"\([^"]*\)"/\1/p' \
-    | grep "_${os}_${arch}${ext}$" || true)
+uaws_install() {
+  mkdir -p ${lib_dir}
+  mkdir -p ${bin_dir}
+
+  urls=$(get_download_urls $1 | grep "_${os}_${arch}${ext}$" || true)
   if [ -z "${urls}" ]
   then
     echo "error: failed to fetch released binary list" >&2
@@ -103,6 +108,11 @@ installed_cmds=$(ls -1 ${lib_dir} \
 case ${1:-} in
   upgrade)
     uaws_install latest ${installed_cmds}
+    exit 0
+    ;;
+  get_download_urls)
+    shift
+    get_download_urls ${1:-latest}
     exit 0
     ;;
   install)
