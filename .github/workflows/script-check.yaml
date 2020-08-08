@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  install.sh:
+  install:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
