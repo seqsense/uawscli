@@ -25,8 +25,14 @@ case $(uname -s) in
     ;;
 esac
 
-bin_dir=$(cd $(dirname $0) && pwd)
-lib_dir=$(cd ${bin_dir}/.. && pwd)/lib/uawscli
+bin_dir="${HOME}/.local/bin"
+lib_dir="${HOME}/.local/lib/uawscli"
+if [ $(basename $0) = "uaws" ]
+then
+  # Resolve install path if installed.
+  bin_dir=$(cd $(dirname $0) && pwd)
+  lib_dir=$(cd ${bin_dir}/.. && pwd)/lib/uawscli
+fi
 
 get_download_urls() {
   version=$1
@@ -103,7 +109,7 @@ uaws_install() {
 }
 
 installed_cmds=$(ls -1 ${lib_dir} \
-  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/")
+  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/" 2> /dev/null)
 
 case ${1:-} in
   upgrade)
