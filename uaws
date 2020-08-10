@@ -37,7 +37,7 @@ esac
 
 bin_dir="${HOME}/.local/bin"
 lib_dir="${HOME}/.local/lib/uawscli"
-if [ $(basename $0) = "uaws" ]
+if [ $(basename $0) = "uaws" ] && [ $0 != "./uaws" ]
 then
   # Resolve install path if installed.
   bin_dir=$(cd $(dirname $0) && pwd)
