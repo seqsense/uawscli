@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install utils
+        run: brew install coreutils
       - name: Install ecr-get-login-password subcommand
         run: ./uaws install ecr-get-login-password
       - name: Check installed command
@@ -20,7 +22,7 @@ jobs:
           export PATH=${PATH}:${HOME}/.local/bin
           which uaws-ecr-get-login-password
           test -L $(which uaws-ecr-get-login-password)
-          test -x $(realpath $(which uaws-ecr-get-login-password))
+          test -x $(grealpath $(which uaws-ecr-get-login-password))
       - name: Check upgrade
         run: ./uaws upgrade
   uaws-install-with-token:
@@ -28,6 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install utils
+        run: brew install coreutils
       - name: Show download URLs
         run: ./uaws get_download_urls
         env:
@@ -41,7 +45,7 @@ jobs:
           export PATH=${PATH}:${HOME}/.local/bin
           which uaws-ecr-get-login-password
           test -L $(which uaws-ecr-get-login-password)
-          test -x $(realpath $(which uaws-ecr-get-login-password))
+          test -x $(grealpath $(which uaws-ecr-get-login-password))
       - name: Check upgrade
         run: ./uaws upgrade
         env:
