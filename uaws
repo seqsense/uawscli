@@ -79,7 +79,7 @@ uaws_install() {
   mkdir -p ${lib_dir}
   mkdir -p ${bin_dir}
 
-  urls=$(get_download_urls $1 | grep "_${os}_${arch}${ext}$" || true)
+  urls=$(get_download_urls $1 | grep -e "_${os}_${arch}${ext}$" || true)
   if [ -z "${urls}" ]
   then
     echo "error: failed to fetch released binary list" >&2
