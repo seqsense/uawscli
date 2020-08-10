@@ -62,7 +62,7 @@ get_download_urls() {
       ${api_auth} \
       -s --retry 4 \
       ${gh_api_base}/repos/${slug}/releases/${ep} \
-    | sed -n 's/.*"browser_download_url":\s*"\([^"]*\)"/\1/p'
+    | sed -n 's/.*"browser_download_url":[ \t\r\n]*"\([^"]*\)"/\1/p'
 }
 
 uaws_install() {
@@ -188,9 +188,9 @@ do
   nquery=1
   query="uaws-$@"
 
-  while echo ${query} | grep -q -e "^\S\+\s"
+  while echo ${query} | grep -q -e "^\S\+[ \t]"
   do
-    query=$(echo ${query} | sed "s/\s/-/")
+    query=$(echo ${query} | sed "s/[ \t]/-/")
     nquery=$(expr ${nquery} + 1)
     if echo ${query} | grep -q -e "^${cmd}"
     then
@@ -205,7 +205,7 @@ if [ -z "${selected_cmd}" ]
 then
   echo "warn: requested command is not installed" >&2
   # not found, try to install
-  uaws_install latest uaws-$(echo "$@" | sed "s/\s/-/g" | head -n1)
+  uaws_install latest uaws-$(echo "$@" | sed "s/[ \t]/-/g" | head -n1)
 fi
 
 exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) $@
