@@ -1,4 +1,4 @@
-name: script test
+name: script test / linux
 on:
   pull_request:
     branches:

@@ -1,4 +1,4 @@
-name: script test osx
+name: script test / osx
 on:
   pull_request:
     branches:
@@ -8,19 +8,6 @@ on:
       - master
 
 jobs:
-  install:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install uaws-ecr-get-login-password
-        run: ./install.sh ecr-get-login-password
-      - name: Check installed command
-        run: |
-          export PATH=${PATH}:${HOME}/.local/bin
-          which uaws-ecr-get-login-password
-          test -L $(which uaws-ecr-get-login-password)
-          test -x $(realpath $(which uaws-ecr-get-login-password))
   uaws-install:
     runs-on: macos-latest
     steps:
