@@ -119,7 +119,7 @@ uaws_install() {
 }
 
 installed_cmds=$(ls -1 ${lib_dir} \
-  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/" 2> /dev/null || true)
+  | sed "s/\(..*\)_[0-9\.]{1,}_${os}_${arch}${ext}/\1/" 2> /dev/null || true)
 
 case ${1:-} in
   upgrade)
