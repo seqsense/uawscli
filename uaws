@@ -89,13 +89,13 @@ uaws_install() {
     found=false
     for url in ${urls}
     do
-      cmd=$(echo $url | sed -n "s|.*/\([^/]*\)_[0-9\.]{1,}_${os}_${arch}${ext}$|\1|p")
+      cmd=$(echo ${url} | sed -n "s|.*/\([^/]*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}$|\1|p")
       if echo ${query} | grep -q -e "^${cmd}"
       then
-        file=$(echo $url | sed -n 's|.*/\([^/]{1,}\)$|\1|p')
+        file=$(echo ${url} | sed -n 's|.*/\([^/]\{1,\}\)$|\1|p')
         if [ ! -f ${lib_dir}/${file} ]
         then
-          echo "info: installing ${url}" >&2
+          echo "info: installing ${url} ${cmd} ${file}" >&2
           curl -sSL ${url} -f -o ${lib_dir}/${file}
           chmod +x ${lib_dir}/${file}
           rm -f ${bin_dir}/${cmd}
@@ -116,7 +116,7 @@ uaws_install() {
 }
 
 installed_cmds=$(ls -1 ${lib_dir} 2> /dev/null \
-  | sed "s/\(..*\)_[0-9\.]{1,}_${os}_${arch}${ext}/\1/" || true)
+  | sed "s/\(..*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}/\1/" || true)
 
 case ${1:-} in
   upgrade)
