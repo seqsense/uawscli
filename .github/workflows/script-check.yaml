@@ -41,6 +41,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Show download URLs
+        run: ./uaws get_download_urls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install ecr-get-login-password subcommand
         run: ./uaws install ecr-get-login-password
         env:
