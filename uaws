@@ -51,7 +51,7 @@ get_download_urls() {
   then
     # Fallback to use download URL list on gh-pages if token is not available.
     # API access from CI services usually fails due to rate limit.
-    curl -s --retry 4 \
+    curl -sSL --retry 4 \
       https://seqsense.github.io/uawscli/releases/${version}
     exit 0
   fi
@@ -70,7 +70,7 @@ get_download_urls() {
   fi
   eval curl \
       ${api_auth} \
-      -s --retry 4 \
+      -sSL --retry 4 \
       ${gh_api_base}/repos/${slug}/releases/${ep} \
     | sed -n 's/.*"browser_download_url":[ \t\r\n]*"\([^"]*\)"/\1/p'
 }
@@ -99,7 +99,7 @@ uaws_install() {
         if [ ! -f ${lib_dir}/${file} ]
         then
           echo "info: installing ${url}" >&2
-          curl -sL ${url} -f -o ${lib_dir}/${file}
+          curl -sSL ${url} -f -o ${lib_dir}/${file}
           chmod +x ${lib_dir}/${file}
           rm -f ${bin_dir}/${cmd}
           ln -s ${lib_dir}/${file} ${bin_dir}/${cmd}
@@ -119,7 +119,7 @@ uaws_install() {
 }
 
 installed_cmds=$(ls -1 ${lib_dir} \
-  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/" 2> /dev/null)
+  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/" 2> /dev/null || true)
 
 case ${1:-} in
   upgrade)
