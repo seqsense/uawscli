@@ -27,7 +27,6 @@ case $(uname -s) in
     ;;
   Darwin)
     os=darwin
-    ext=.tar.gz
     ;;
   *)
     echo "error: unsupported OS $(uname -s)" >&2
