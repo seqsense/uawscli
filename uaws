@@ -3,12 +3,18 @@
 set -eu
 
 arch=
-case $(uname -p) in
+case $(uname -m) in
   x86_64)
     arch=amd64
     ;;
+  arm64)
+    arch=arm64
+    ;;
+  aarch64)
+    arch=arm64
+    ;;
   *)
-    echo "error: unsupported arch" >&2
+    echo "error: unsupported arch $(uname -m)" >&2
     exit 1
     ;;
 esac
@@ -19,15 +25,18 @@ case $(uname -s) in
   Linux)
     os=linux
     ;;
+  Darwin)
+    os=darwin
+    ;;
   *)
-    echo "error: unsupported OS" >&2
+    echo "error: unsupported OS $(uname -s)" >&2
     exit 1
     ;;
 esac
 
 bin_dir="${HOME}/.local/bin"
 lib_dir="${HOME}/.local/lib/uawscli"
-if [ $(basename $0) = "uaws" ]
+if [ $(basename $0) = "uaws" ] && [ $0 != "./uaws" ]
 then
   # Resolve install path if installed.
   bin_dir=$(cd $(dirname $0) && pwd)
@@ -41,7 +50,7 @@ get_download_urls() {
   then
     # Fallback to use download URL list on gh-pages if token is not available.
     # API access from CI services usually fails due to rate limit.
-    curl -s --retry 4 \
+    curl -sSL --retry 4 \
       https://seqsense.github.io/uawscli/releases/${version}
     exit 0
   fi
@@ -51,25 +60,23 @@ get_download_urls() {
   gh_api_base=${GITHUB_API_URL_BASE:-https://api.github.com}
   slug=seqsense/uawscli
 
-  ep=
-  if [ ${version} = "latest" ]
+  ep=latest
+  if [ ${version} != "latest" ]
   then
-    ep=latest
-  else
     ep=tags/${version}
   fi
   eval curl \
       ${api_auth} \
-      -s --retry 4 \
+      -sSL --retry 4 \
       ${gh_api_base}/repos/${slug}/releases/${ep} \
-    | sed -n 's/.*"browser_download_url":\s*"\([^"]*\)"/\1/p'
+    | sed -n 's/.*"browser_download_url":[ \t\r\n]*"\([^"]*\)"/\1/p'
 }
 
 uaws_install() {
   mkdir -p ${lib_dir}
   mkdir -p ${bin_dir}
 
-  urls=$(get_download_urls $1 | grep "_${os}_${arch}${ext}$" || true)
+  urls=$(get_download_urls $1 | grep -e "_${os}_${arch}${ext}$" || true)
   if [ -z "${urls}" ]
   then
     echo "error: failed to fetch released binary list" >&2
@@ -82,14 +89,14 @@ uaws_install() {
     found=false
     for url in ${urls}
     do
-      cmd=$(echo $url | sed -n "s|.*/\([^/]*\)_[0-9\.]\+_${os}_${arch}${ext}$|\1|p")
+      cmd=$(echo ${url} | sed -n "s|.*/\([^/]*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}$|\1|p")
       if echo ${query} | grep -q -e "^${cmd}"
       then
-        file=$(echo $url | sed -n 's|.*/\([^/]\+\)$|\1|p')
+        file=$(echo ${url} | sed -n 's|.*/\([^/]\{1,\}\)$|\1|p')
         if [ ! -f ${lib_dir}/${file} ]
         then
-          echo "info: installing ${url}" >&2
-          curl -sL ${url} -f -o ${lib_dir}/${file}
+          echo "info: installing ${url} ${cmd} ${file}" >&2
+          curl -sSL ${url} -f -o ${lib_dir}/${file}
           chmod +x ${lib_dir}/${file}
           rm -f ${bin_dir}/${cmd}
           ln -s ${lib_dir}/${file} ${bin_dir}/${cmd}
@@ -108,8 +115,8 @@ uaws_install() {
   done
 }
 
-installed_cmds=$(ls -1 ${lib_dir} \
-  | sed "s/\(.\+\)_[0-9\.]\+_${os}_${arch}${ext}/\1/" 2> /dev/null)
+installed_cmds=$(ls -1 ${lib_dir} 2> /dev/null \
+  | sed "s/\(..*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}/\1/" || true)
 
 case ${1:-} in
   upgrade)
@@ -188,9 +195,9 @@ do
   nquery=1
   query="uaws-$@"
 
-  while echo ${query} | grep -q -e "^\S\+\s"
+  while echo ${query} | grep -q -e "^\S\+[ \t]"
   do
-    query=$(echo ${query} | sed "s/\s/-/")
+    query=$(echo ${query} | sed "s/[ \t]/-/")
     nquery=$(expr ${nquery} + 1)
     if echo ${query} | grep -q -e "^${cmd}"
     then
@@ -205,7 +212,7 @@ if [ -z "${selected_cmd}" ]
 then
   echo "warn: requested command is not installed" >&2
   # not found, try to install
-  uaws_install latest uaws-$(echo "$@" | sed "s/\s/-/g" | head -n1)
+  uaws_install latest uaws-$(echo "$@" | sed "s/[ \t]/-/g" | head -n1)
 fi
 
 exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) $@
