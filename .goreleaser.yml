@@ -16,9 +16,27 @@ builds:
     hooks:
       post:
         - upx "{{ .Path }}"
+  - id: uaws-s3-sync
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/uaws-s3-sync/
+    binary: uaws-s3-sync
+    ldflags:
+      - "-s -w"
+    hooks:
+      post:
+        - upx "{{ .Path }}"
 archives:
   - builds:
       - uaws-ecr-get-login-password
+      - uaws-s3-sync
     format: binary
 checksum:
   name_template: 'checksums.txt'
