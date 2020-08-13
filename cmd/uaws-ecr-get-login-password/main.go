@@ -22,7 +22,7 @@ func main() {
 	req := svc.GetAuthorizationTokenRequest(&ecr.GetAuthorizationTokenInput{})
 	res, err := req.Send(context.Background())
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: failed to get ect login password: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error: failed to get ecr login password: %v\n", err)
 		return
 	}
 
