@@ -15,6 +15,7 @@ func main() {
 	var (
 		del    = flag.Bool("delete", false, "delete files which are not existing in the source location")
 		dryrun = flag.Bool("dryrun", false, "display the operations that would be performed")
+		acl    = flag.String("acl", "", "set Access Control List")
 		noSign = flag.Bool("no-sign-request", false, "do not sign the request")
 	)
 
@@ -24,15 +25,6 @@ func main() {
 	}
 
 	flag.Parse()
-
-	if *del {
-		fmt.Fprintf(os.Stderr, "error: -delete is not yet implemented\n")
-		os.Exit(1)
-	}
-	if *dryrun {
-		fmt.Fprintf(os.Stderr, "error: -dryrun is not yet implemented\n")
-		os.Exit(1)
-	}
 
 	if flag.NArg() != 2 {
 		flag.Usage()
@@ -47,6 +39,17 @@ func main() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to create session: %v\n", err)
 		os.Exit(1)
+	}
+
+	opts := []s3sync.Option{}
+	if *del {
+		opts = append(opts, s3sync.WithDelete())
+	}
+	if *dryrun {
+		opts = append(opts, s3sync.WithDryRun())
+	}
+	if *acl != "" {
+		opts = append(opts, s3sync.WithACL(*acl))
 	}
 
 	err = s3sync.New(sess).Sync(flag.Arg(0), flag.Arg(1))
