@@ -195,9 +195,9 @@ do
   nquery=1
   query="uaws-$@"
 
-  while echo ${query} | grep -q -e "^\S\+[ \t]"
+  while echo ${query} | grep -q -e "^\S\+ "
   do
-    query=$(echo ${query} | sed "s/[ \t]/-/")
+    query=$(echo ${query} | sed "s/ /-/")
     nquery=$(expr ${nquery} + 1)
     if echo ${query} | grep -q -e "^${cmd}"
     then
@@ -212,7 +212,7 @@ if [ -z "${selected_cmd}" ]
 then
   echo "warn: requested command is not installed" >&2
   # not found, try to install
-  uaws_install latest uaws-$(echo "$@" | sed "s/[ \t]/-/g" | head -n1)
+  uaws_install latest uaws-$(echo $@ | sed "s/ /-/g" | head -n1)
 fi
 
 exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) $@
