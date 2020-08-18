@@ -189,30 +189,34 @@ case ${1:-} in
     ;;
 esac
 
-selected_cmd=
-for cmd in ${installed_cmds}
+for i in 1 2
 do
-  nquery=1
-  query="uaws-$@"
-
-  while echo ${query} | grep -q -e "^\S\+ "
+  selected_cmd=
+  for cmd in ${installed_cmds}
   do
-    query=$(echo ${query} | sed "s/ /-/")
-    nquery=$(expr ${nquery} + 1)
-    if echo ${query} | grep -q -e "^${cmd}"
-    then
-      selected_cmd=${cmd}
-      shift ${nquery}
-      break
-    fi
+    nquery=1
+    query="uaws-$@"
+
+    while echo ${query} | grep -q -e "^\S\+ "
+    do
+      query=$(echo ${query} | sed "s/ /-/")
+      nquery=$(expr ${nquery} + 1)
+      if echo ${query} | grep -q -e "^${cmd}"
+      then
+        selected_cmd=${cmd}
+        shift ${nquery}
+        break
+      fi
+    done
   done
+
+  if [ -z "${selected_cmd}" ]
+  then
+    echo "warn: requested command is not installed" >&2
+    # not found, try to install
+    uaws_install latest uaws-$(echo $@ | sed "s/ /-/g" | head -n1)
+    continue
+  fi
+
+  exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) $@
 done
-
-if [ -z "${selected_cmd}" ]
-then
-  echo "warn: requested command is not installed" >&2
-  # not found, try to install
-  uaws_install latest uaws-$(echo $@ | sed "s/ /-/g" | head -n1)
-fi
-
-exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) $@
