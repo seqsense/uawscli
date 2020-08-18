@@ -52,6 +52,7 @@ builds:
         - upx "{{ .Path }}"
 archives:
   - builds:
+      - uaws-cloudfront-create-invalidation
       - uaws-ecr-get-login-password
       - uaws-s3-sync
     format: binary
