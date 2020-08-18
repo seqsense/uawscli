@@ -1,4 +1,21 @@
 builds:
+  - id: uaws-cloudfront-create-invalidation
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/uaws-cloudfront-create-invalidation/
+    binary: uaws-cloudfront-create-invalidation
+    ldflags:
+      - "-s -w"
+    hooks:
+      post:
+        - upx "{{ .Path }}"
   - id: uaws-ecr-get-login-password
     env:
       - CGO_ENABLED=0
@@ -16,9 +33,27 @@ builds:
     hooks:
       post:
         - upx "{{ .Path }}"
+  - id: uaws-s3-sync
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/uaws-s3-sync/
+    binary: uaws-s3-sync
+    ldflags:
+      - "-s -w"
+    hooks:
+      post:
+        - upx "{{ .Path }}"
 archives:
   - builds:
       - uaws-ecr-get-login-password
+      - uaws-s3-sync
     format: binary
 checksum:
   name_template: 'checksums.txt'
