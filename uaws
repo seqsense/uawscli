@@ -115,8 +115,12 @@ uaws_install() {
   done
 }
 
-installed_cmds=$(ls -1 ${lib_dir} 2> /dev/null \
-  | sed "s/\(..*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}/\1/" || true)
+collect_installed_cmds() {
+  ls -1 ${lib_dir} 2> /dev/null \
+    | sed "s/\(..*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}/\1/" || true
+}
+
+installed_cmds=$(collect_installed_cmds)
 
 case ${1:-} in
   upgrade)
@@ -215,6 +219,7 @@ do
     echo "warn: requested command is not installed" >&2
     # not found, try to install
     uaws_install latest uaws-$(echo $@ | sed "s/ /-/g" | head -n1)
+    installed_cmds=$(collect_installed_cmds)
     continue
   fi
 
