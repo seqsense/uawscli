@@ -1,4 +1,21 @@
 builds:
+  - id: uaws-cloudfront-create-invalidation
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/uaws-cloudfront-create-invalidation/
+    binary: uaws-cloudfront-create-invalidation
+    ldflags:
+      - "-s -w"
+    hooks:
+      post:
+        - upx "{{ .Path }}"
   - id: uaws-ecr-get-login-password
     env:
       - CGO_ENABLED=0
