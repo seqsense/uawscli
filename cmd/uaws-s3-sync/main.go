@@ -52,7 +52,7 @@ func main() {
 		opts = append(opts, s3sync.WithACL(*acl))
 	}
 
-	err = s3sync.New(sess).Sync(flag.Arg(0), flag.Arg(1))
+	err = s3sync.New(sess, opts...).Sync(flag.Arg(0), flag.Arg(1))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
