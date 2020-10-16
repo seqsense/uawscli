@@ -23,6 +23,14 @@
             "patch": {
                 "automerge": true
             }
+        },
+        {
+            "packagePatterns": [
+                "^github.com/seqsense/"
+            ],
+            "schedule": [
+                "at any time"
+            ]
         }
     ],
     "timezone": "Asia/Tokyo"
