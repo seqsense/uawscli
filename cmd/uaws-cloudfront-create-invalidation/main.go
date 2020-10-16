@@ -9,8 +9,9 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	cf_types "github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 )
 
 func main() {
@@ -43,24 +44,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	cfg, err := external.LoadDefaultAWSConfig()
+	cfg, err := config.LoadDefaultConfig()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to load config: %v\n", err)
 	}
 
-	svc := cloudfront.New(cfg)
+	svc := cloudfront.NewFromConfig(cfg)
 
-	req := svc.CreateInvalidationRequest(&cloudfront.CreateInvalidationInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	res, err := svc.CreateInvalidation(ctx, &cloudfront.CreateInvalidationInput{
 		DistributionId: aws.String(*distributionID),
-		InvalidationBatch: &cloudfront.InvalidationBatch{
+		InvalidationBatch: &cf_types.InvalidationBatch{
 			CallerReference: aws.String(time.Now().UTC().Format("20060102150405")),
-			Paths: &cloudfront.Paths{
-				Items:    pathsSlice,
-				Quantity: aws.Int64(int64(len(pathsSlice))),
+			Paths: &cf_types.Paths{
+				Items:    aws.StringSlice(pathsSlice),
+				Quantity: aws.Int32(int32(len(pathsSlice))),
 			},
 		},
 	})
-	res, err := req.Send(context.Background())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to create invalidation: %v\n", err)
 		return
