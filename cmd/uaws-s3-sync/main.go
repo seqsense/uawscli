@@ -13,10 +13,12 @@ import (
 
 func main() {
 	var (
-		del    = flag.Bool("delete", false, "delete files which are not existing in the source location")
-		dryrun = flag.Bool("dryrun", false, "display the operations that would be performed")
-		acl    = flag.String("acl", "", "set Access Control List")
-		noSign = flag.Bool("no-sign-request", false, "do not sign the request")
+		del         = flag.Bool("delete", false, "delete files which are not existing in the source location")
+		dryrun      = flag.Bool("dryrun", false, "display the operations that would be performed")
+		acl         = flag.String("acl", "", "set Access Control List")
+		noSign      = flag.Bool("no-sign-request", false, "do not sign the request")
+		contentType = flag.String("content-type", "", "override upload content type (MIME)")
+		noGuessMime = flag.Bool("no-guess-mime-type", false, "do not try to guess the upload content type")
 	)
 
 	flag.Usage = func() {
@@ -50,6 +52,12 @@ func main() {
 	}
 	if *acl != "" {
 		opts = append(opts, s3sync.WithACL(*acl))
+	}
+	if *contentType != "" {
+		opts = append(opts, s3sync.WithContentType(*contentType))
+	}
+	if *noGuessMime {
+		opts = append(opts, s3sync.WithoutGuessMimeType())
 	}
 
 	err = s3sync.New(sess, opts...).Sync(flag.Arg(0), flag.Arg(1))
