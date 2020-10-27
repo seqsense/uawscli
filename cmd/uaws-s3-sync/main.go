@@ -17,7 +17,7 @@ func main() {
 		dryrun      = flag.Bool("dryrun", false, "display the operations that would be performed")
 		acl         = flag.String("acl", "", "set Access Control List")
 		noSign      = flag.Bool("no-sign-request", false, "do not sign the request")
-		contentType = flag.String("content-type", "", "override upload content type (MIME)")
+		contentType = flag.String("content-type", "", "override upload content type (MIME type)")
 		noGuessMime = flag.Bool("no-guess-mime-type", false, "do not try to guess the upload content type")
 	)
 
