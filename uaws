@@ -117,7 +117,9 @@ uaws_install() {
 
 collect_installed_cmds() {
   ls -1 ${lib_dir} 2> /dev/null \
-    | sed "s/\(..*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}/\1/" || true
+    | sed "s/\(..*\)_[0-9\.]\{1,\}_${os}_${arch}${ext}/\1/" \
+    | sort \
+    | uniq || true
 }
 
 installed_cmds=$(collect_installed_cmds)
