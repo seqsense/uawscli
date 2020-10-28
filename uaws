@@ -225,5 +225,5 @@ do
     continue
   fi
 
-  exec $(ls -1 ${lib_dir}/${selected_cmd}* | head -n1) "$@"
+  exec $(ls -1 ${lib_dir}/${selected_cmd}* | sort -rV | head -n1) "$@"
 done
