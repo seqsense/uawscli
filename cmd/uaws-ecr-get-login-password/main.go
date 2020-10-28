@@ -6,21 +6,24 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
-	"github.com/aws/aws-sdk-go-v2/aws/external"
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
 )
 
 func main() {
-	cfg, err := external.LoadDefaultAWSConfig()
+	cfg, err := config.LoadDefaultConfig()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to load config: %v\n", err)
 	}
 
-	svc := ecr.New(cfg)
+	svc := ecr.NewFromConfig(cfg)
 
-	req := svc.GetAuthorizationTokenRequest(&ecr.GetAuthorizationTokenInput{})
-	res, err := req.Send(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	res, err := svc.GetAuthorizationToken(ctx, &ecr.GetAuthorizationTokenInput{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to get ecr login password: %v\n", err)
 		return
