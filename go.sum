@@ -2,8 +2,6 @@ github.com/aws/aws-sdk-go v1.35.14 h1:nucVVXXjAr9UkmYCBWxQWRuYa5KOlaXjuJGg2ulW0K
 github.com/aws/aws-sdk-go v1.35.14/go.mod h1:tlPOdRjfxPBpNIwqDj61rmsnA85v9jc0Ps9+muhnW+k=
 github.com/aws/aws-sdk-go v1.35.27 h1:F0dUW+kouzchjt4X6kYfYMw1YtQPkA4pihpCDqQMrq8=
 github.com/aws/aws-sdk-go v1.35.27/go.mod h1:tlPOdRjfxPBpNIwqDj61rmsnA85v9jc0Ps9+muhnW+k=
-github.com/aws/aws-sdk-go-v2 v0.28.0 h1:+LRTQpWWXQBsjqd5nNkOGvKey6LWL01xZnyMQB/ZLwo=
-github.com/aws/aws-sdk-go-v2 v0.28.0/go.mod h1:P9h1Cf+uOpElAT533QXKOzrpFaOlm8JMorThJNUfQ6Q=
 github.com/aws/aws-sdk-go-v2 v0.29.0 h1:V/KKvuMO2hwHRg2SXJc5aasBHhD1AWbS6KMWg/Ueq1w=
 github.com/aws/aws-sdk-go-v2 v0.29.0/go.mod h1:4d1/Ee0vCwCF7BfG1hCT3zu82493cRy5+VZ8JHvMPf0=
 github.com/aws/aws-sdk-go-v2/config v0.2.2 h1:CBZGPlpL5h+BDoNBNTgypqMxlWgCome/O/i8gdjaOtE=
@@ -12,14 +10,12 @@ github.com/aws/aws-sdk-go-v2/credentials v0.1.4 h1:ReVvyoYW/HriCnCWMoWC2ftvh0g9U
 github.com/aws/aws-sdk-go-v2/credentials v0.1.4/go.mod h1:o0z92KOE6YJ/DyGSJmt83dG9YlGUc2n04QYwbfNsA8Q=
 github.com/aws/aws-sdk-go-v2/ec2imds v0.1.4 h1:N3atV6naU7rFtS3gg/XU2ZuiPqzFm3HONBbnGDdPq1A=
 github.com/aws/aws-sdk-go-v2/ec2imds v0.1.4/go.mod h1:h5WB2P4CTnVroyw/gvIiyMTtl/zvnKAC4H74EWiKOco=
-github.com/aws/aws-sdk-go-v2/service/cloudfront v0.28.0 h1:rmrwitbqnHgN4AkCaSavyPSamS+SlfWcS0suXKQsdVM=
-github.com/aws/aws-sdk-go-v2/service/cloudfront v0.28.0/go.mod h1:k62yJwFGrj4NVDRytFyYd0o92quCGVB4tuuDbaWap+A=
+github.com/aws/aws-sdk-go-v2/service/cloudfront v0.29.0 h1:05F/fX/Hio9DtGYqhz0q1BR3cZB7Hoa2iaEMa9hY/6A=
+github.com/aws/aws-sdk-go-v2/service/cloudfront v0.29.0/go.mod h1:QSlLv0nFS6Id3ONVsls4IVsfAi+fhlLJ1nv7wQ6QJco=
 github.com/aws/aws-sdk-go-v2/service/ecr v0.29.0 h1:90pUygW5pNWDPevIhGW1ZQTyQLj+0wRulp+LSWu3C+w=
 github.com/aws/aws-sdk-go-v2/service/ecr v0.29.0/go.mod h1:LyKofpBtPt037Ok+oj1REhIQwNZ3Hz+PcuY0mQmAZrA=
 github.com/aws/aws-sdk-go-v2/service/sts v0.29.0 h1:EOEsrzOQh+xU4lKbrkRoTybsP704I32GczRFsW6apEw=
 github.com/aws/aws-sdk-go-v2/service/sts v0.29.0/go.mod h1:zV0Fx4GE1wPZJ3iHn1g7UxoPb+uJfqOkvBp3UQAq3bc=
-github.com/awslabs/smithy-go v0.2.1 h1:guvR5teu1q6IoZnE9PFyPjxh/H7YEcZGysx9vu5ZwZ0=
-github.com/awslabs/smithy-go v0.2.1/go.mod h1:hPOQwnmBLHsUphH13tVSjQhTAFma0/0XoZGbBcOuABI=
 github.com/awslabs/smithy-go v0.3.0 h1:I1EQ1P+VtxpuNnGYymATewaKrlnaYQwFvO8lNTsafbs=
 github.com/awslabs/smithy-go v0.3.0/go.mod h1:hPOQwnmBLHsUphH13tVSjQhTAFma0/0XoZGbBcOuABI=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
@@ -44,9 +40,8 @@ golang.org/x/net v0.0.0-20200202094626-16171245cfb2/go.mod h1:z5CRVTTTmAJ677TzLL
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 h1:E7g+9GITq07hpfrRu66IVDexMakfv52eLZ2CXBWiKr4=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
-golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 h1:go1bK/D/BFZV2I8cIQd1NKEZ+0owSTG1fDTci4IqFcE=
-golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.8 h1:obN1ZagJSUGI0Ek/LBmuj4SNLPfIny3KsKFopxRdj10=
