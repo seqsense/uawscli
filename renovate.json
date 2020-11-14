@@ -23,8 +23,7 @@
         },
         {
             "packagePatterns": [
-                "^github.com/aws/aws-sdk-go$",
-                "^github.com/aws/aws-sdk-go/"
+                "^github.com/aws/aws-sdk-go$"
             ],
             "separateMinorPatch": true,
             "patch": {
