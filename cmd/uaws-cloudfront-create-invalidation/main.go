@@ -59,7 +59,7 @@ func main() {
 		InvalidationBatch: &cf_types.InvalidationBatch{
 			CallerReference: aws.String(time.Now().UTC().Format("20060102150405")),
 			Paths: &cf_types.Paths{
-				Items:    aws.StringSlice(pathsSlice),
+				Items:    pathsSlice,
 				Quantity: aws.Int32(int32(len(pathsSlice))),
 			},
 		},
