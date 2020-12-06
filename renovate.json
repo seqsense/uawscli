@@ -17,13 +17,6 @@
         },
         {
             "packagePatterns": [
-                "^github.com/aws/aws-sdk-go-v2"
-            ],
-            "updateTypes": ["minor", "patch"],
-            "groupName": "aws-sdk-go-v2"
-        },
-        {
-            "packagePatterns": [
                 "^github.com/aws/aws-sdk-go$"
             ],
             "separateMinorPatch": true,
