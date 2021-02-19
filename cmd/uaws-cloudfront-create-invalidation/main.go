@@ -44,15 +44,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	cfg, err := config.LoadDefaultConfig()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to load config: %v\n", err)
 	}
 
 	svc := cloudfront.NewFromConfig(cfg)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
 
 	res, err := svc.CreateInvalidation(ctx, &cloudfront.CreateInvalidationInput{
 		DistributionId: aws.String(*distributionID),
