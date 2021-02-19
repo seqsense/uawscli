@@ -13,15 +13,15 @@ import (
 )
 
 func main() {
-	cfg, err := config.LoadDefaultConfig()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: failed to load config: %v\n", err)
 	}
 
 	svc := ecr.NewFromConfig(cfg)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
 
 	res, err := svc.GetAuthorizationToken(ctx, &ecr.GetAuthorizationTokenInput{})
 	if err != nil {
