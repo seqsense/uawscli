@@ -8,7 +8,7 @@
     ],
     "packageRules": [
         {
-            "packagePatterns": [
+            "matchPackagePatterns": [
                 "^golang.org/x/"
             ],
             "schedule": [
@@ -16,8 +16,8 @@
             ]
         },
         {
-            "packagePatterns": [
-                "^github.com/aws/aws-sdk-go"
+            "matchPackagePatterns": [
+                "^github.com/aws/aws-sdk-go$"
             ],
             "separateMinorPatch": true,
             "patch": {
@@ -25,7 +25,7 @@
             }
         },
         {
-            "packagePatterns": [
+            "matchPackagePatterns": [
                 "^github.com/seqsense/"
             ],
             "schedule": [
