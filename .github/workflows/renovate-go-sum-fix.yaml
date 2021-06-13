@@ -23,6 +23,7 @@ jobs:
       - name: update aws-sdk-go-v2 subpackages
         if: startsWith(github.event.ref, 'refs/heads/renovate/github.com-aws-aws-sdk-go-v2-')
         run: |
+          chown -R "${USER}:" *
           go get github.com/aws/aws-sdk-go-v2/config
           go get github.com/aws/aws-sdk-go-v2/service/cloudfront
           go get github.com/aws/aws-sdk-go-v2/service/ecr
