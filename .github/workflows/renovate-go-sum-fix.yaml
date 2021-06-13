@@ -12,6 +12,17 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
+      - name: update aws-sdk-go-v2 subpackages
+        if: startsWith(github.event.ref, 'refs/heads/renovate/github.com-aws-aws-sdk-go-v2-')
+        run: |
+          go get github.com/aws/aws-sdk-go-v2/config
+          go get github.com/aws/aws-sdk-go-v2/service/cloudfront
+          go get github.com/aws/aws-sdk-go-v2/service/ecr
+          go mod tidy
+          git config user.name "Atsushi Watanabe"
+          git config user.email "atsushi.w@ieee.org"
+          git add go.*
+          git commit --amend --no-edit
       - name: fix
         uses: at-wat/go-sum-fix-action@v0
         with:
