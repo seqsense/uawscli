@@ -41,5 +41,5 @@ jobs:
               --global \
               --add http."https://github.com/".extraheader \
                 "Authorization: Basic $(echo -n "x-access-token:${{ secrets.SQBOT_GITHUB_TOKEN }}" | base64 | tr -d '\n')"
-            git push origin ${GITHUB_REF#refs/heads}
+            git push origin ${GITHUB_REF#refs/heads/}
           fi
