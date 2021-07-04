@@ -20,26 +20,5 @@ jobs:
           github_token: ${{ secrets.SQBOT_GITHUB_TOKEN }}
           commit_style: squash
           push: force
-      - name: update aws-sdk-go-v2 subpackages
-        if: startsWith(github.event.ref, 'refs/heads/renovate/github.com-aws-aws-sdk-go-v2-')
-        run: |
-          sudo chown -R "${USER}:" *
-          go get github.com/aws/aws-sdk-go-v2/config
-          go get github.com/aws/aws-sdk-go-v2/service/cloudfront
-          go get github.com/aws/aws-sdk-go-v2/service/ecr
-          go mod tidy
-
-          if ! git diff --exit-code
-          then
-            git config user.name "Atsushi Watanabe"
-            git config user.email "atsushi.w@ieee.org"
-            git add go.*
-            git commit -m "Update aws-sdk-go-v2 subpackages"
-
-            git config --unset http."https://github.com/".extraheader
-            git config \
-              --global \
-              --add http."https://github.com/".extraheader \
-                "Authorization: Basic $(echo -n "x-access-token:${{ secrets.SQBOT_GITHUB_TOKEN }}" | base64 | tr -d '\n')"
-            git push origin ${GITHUB_REF#refs/heads/}
-          fi
+          monorepos: |
+            github.com/aws/aws-sdk-go-v2
