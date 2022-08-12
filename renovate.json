@@ -17,6 +17,12 @@
         },
         {
             "matchPackagePatterns": [
+                "^github.com/aws/aws-sdk-go-v2"
+            ],
+            "groupName": "github.com/aws/aws-sdk-go-v2"
+        },
+        {
+            "matchPackagePatterns": [
                 "^github.com/aws/aws-sdk-go$"
             ],
             "separateMinorPatch": true
