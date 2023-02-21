@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-go@v3
       - name: Install latest upx
         run: make install-upx
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Show upx version
         run: upx --version
       - name: Run GoReleaser
