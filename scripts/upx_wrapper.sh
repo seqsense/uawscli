@@ -5,4 +5,4 @@ if [ $2 = "windows" ] && [ $3 = "arm64" ]; then
   exit 0
 fi
 
-upx $1 || true
+exec upx $1
