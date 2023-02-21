@@ -15,7 +15,7 @@ builds:
       - "-s -w"
     hooks:
       post:
-        - upx "{{ .Path }}"
+        - ./scripts/upx_wrapper.sh "{{ .Path }}"
   - id: uaws-ecr-get-login-password
     env:
       - CGO_ENABLED=0
@@ -32,7 +32,7 @@ builds:
       - "-s -w"
     hooks:
       post:
-        - upx "{{ .Path }}"
+        - ./scripts/upx_wrapper.sh "{{ .Path }}"
   - id: uaws-s3-sync
     env:
       - CGO_ENABLED=0
@@ -49,7 +49,7 @@ builds:
       - "-s -w"
     hooks:
       post:
-        - upx "{{ .Path }}"
+        - ./scripts/upx_wrapper.sh "{{ .Path }}" "{{ .Runtime.Goos }}" "{{ .Runtime.Goarch }}"
 archives:
   - builds:
       - uaws-cloudfront-create-invalidation
