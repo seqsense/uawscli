@@ -13,7 +13,12 @@
       - "-s -w"
     hooks:
       post:
-        - ./scripts/upx_wrapper.sh "{{ .Path }}" "{{ .Runtime.Goos }}" "{{ .Runtime.Goarch }}"
+        - |
+          {{- if and (eq .Os "windows") (eq .Arch "arm64") -}}
+            echo "Skipped on windows-arm64"
+          {{- else -}}
+            upx "{{ .Path }}"
+          {{- end -}}
 
 builds:
   - <<: *build_base
