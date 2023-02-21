@@ -15,8 +15,10 @@ jobs:
         run: git fetch --prune --unshallow
       - name: Setup Go
         uses: actions/setup-go@v3
-      - name: Run GoReleaser
+      - name: Install GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
-          args: release --clean --skip-publish --snapshot
+          install-only: true
+      - name: Run GoReleaser
+        run: goreleaser release --clean --skip-publish --snapshot
