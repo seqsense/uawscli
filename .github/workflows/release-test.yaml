@@ -16,6 +16,8 @@ jobs:
         run: git fetch --prune --unshallow
       - name: Setup Go
         uses: actions/setup-go@v3
+      - name: Show upx version
+        run: upx --version
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
