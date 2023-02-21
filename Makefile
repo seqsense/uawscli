@@ -1,3 +1,5 @@
+TOOLS_PATH := $(HOME)/.local/bin
+
 .PHONY: build
 build:
 	goreleaser build --snapshot
@@ -9,5 +11,5 @@ clean:
 .PHONY: install-upx
 install-upx:
 	gh release download --repo=upx/upx --pattern="upx-*-amd64_linux.tar.xz" --output=- \
-		| tar -C $(HOME)/.local/bin/ -xJf - --strip-components=1 --wildcards '*/upx'
-	chmod +x $(HOME)/.local/bin/upx
+		| tar -C $(TOOLS_PATH) -xJf - --strip-components=1 --wildcards '*/upx'
+	chmod +x $(TOOLS_PATH)/upx
