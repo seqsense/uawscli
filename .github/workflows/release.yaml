@@ -14,12 +14,6 @@ jobs:
         run: git fetch --prune --unshallow
       - name: Setup Go
         uses: actions/setup-go@v3
-      - name: Install latest upx
-        run: sudo -E make install-upx TOOLS_PATH=/usr/local/bin
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Show upx version
-        run: upx --version
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
