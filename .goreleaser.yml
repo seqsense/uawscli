@@ -1,5 +1,5 @@
-builds:
-  - id: uaws-cloudfront-create-invalidation
+&shared:
+  build: &build_base
     env:
       - CGO_ENABLED=0
     goos:
@@ -9,47 +9,25 @@ builds:
     goarch:
       - amd64
       - arm64
-    main: ./cmd/uaws-cloudfront-create-invalidation/
-    binary: uaws-cloudfront-create-invalidation
-    ldflags:
-      - "-s -w"
-    hooks:
-      post:
-        - ./scripts/upx_wrapper.sh "{{ .Path }}"
-  - id: uaws-ecr-get-login-password
-    env:
-      - CGO_ENABLED=0
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    main: ./cmd/uaws-ecr-get-login-password/
-    binary: uaws-ecr-get-login-password
-    ldflags:
-      - "-s -w"
-    hooks:
-      post:
-        - ./scripts/upx_wrapper.sh "{{ .Path }}"
-  - id: uaws-s3-sync
-    env:
-      - CGO_ENABLED=0
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - arm64
-    main: ./cmd/uaws-s3-sync/
-    binary: uaws-s3-sync
     ldflags:
       - "-s -w"
     hooks:
       post:
         - ./scripts/upx_wrapper.sh "{{ .Path }}" "{{ .Runtime.Goos }}" "{{ .Runtime.Goarch }}"
+
+builds:
+  - <<: *build_base
+    id: uaws-cloudfront-create-invalidation
+    main: ./cmd/uaws-cloudfront-create-invalidation/
+    binary: uaws-cloudfront-create-invalidation
+  - <<: *build_base
+    id: uaws-ecr-get-login-password
+    main: ./cmd/uaws-ecr-get-login-password/
+    binary: uaws-ecr-get-login-password
+  - <<: *build_base
+    id: uaws-s3-sync
+    main: ./cmd/uaws-s3-sync/
+    binary: uaws-s3-sync
 archives:
   - builds:
       - uaws-cloudfront-create-invalidation
