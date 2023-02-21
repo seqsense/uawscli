@@ -14,11 +14,11 @@
     hooks:
       post:
         - |
-          {{- if and (eq .Os "windows") (eq .Arch "arm64") -}}
+          {{ if and (eq .Os "windows") (eq .Arch "arm64") -}}
             echo "Skipped on windows-arm64"
           {{- else -}}
             upx "{{ .Path }}"
-          {{- end -}}
+          {{- end }}
 
 builds:
   - <<: *build_base
