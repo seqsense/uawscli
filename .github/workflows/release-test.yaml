@@ -4,7 +4,6 @@ on:
     paths:
       - '.github/workflows/release-test.yaml'
       - '.goreleaser.yml'
-      - 'Makefile'
 
 jobs:
   goreleaser:
