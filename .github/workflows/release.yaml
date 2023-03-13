@@ -46,3 +46,9 @@ jobs:
           git add releases
           git commit -m "Update releases ${tag} information"
           git push origin gh-pages
+
+      - name: Notify failure
+        uses: seqsense/sq-actions/notify-branch-build@main
+        if: failure() && github.event_name == 'push'
+        with:
+          title: ":x: Release failed"
