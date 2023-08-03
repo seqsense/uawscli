@@ -33,6 +33,10 @@ builds:
     id: uaws-s3-sync
     main: ./cmd/uaws-s3-sync/
     binary: uaws-s3-sync
+  - <<: *build_base
+    id: uaws-ssm-get-parameter
+    main: ./cmd/uaws-ssm-get-parameter/
+    binary: uaws-ssm-get-parameter
 archives:
   - builds:
       - uaws-cloudfront-create-invalidation
