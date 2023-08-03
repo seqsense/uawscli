@@ -38,6 +38,7 @@ archives:
       - uaws-cloudfront-create-invalidation
       - uaws-ecr-get-login-password
       - uaws-s3-sync
+      - uaws-ssm-get-parameter
     format: binary
 checksum:
   name_template: 'checksums.txt'
