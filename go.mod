@@ -9,5 +9,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.28.5
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.20.0
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.37.5
-	github.com/seqsense/s3sync v1.9.0
+	github.com/seqsense/s3sync v1.9.1
 )
