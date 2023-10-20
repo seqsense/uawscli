@@ -3,7 +3,7 @@ module github.com/seqsense/uawscli
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go v1.45.25
+	github.com/aws/aws-sdk-go v1.45.28
 	github.com/aws/aws-sdk-go-v2 v1.21.1
 	github.com/aws/aws-sdk-go-v2/config v1.18.44
 	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.28.6
