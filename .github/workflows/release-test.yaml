@@ -21,4 +21,4 @@ jobs:
           version: latest
           install-only: true
       - name: Run GoReleaser
-        run: goreleaser release --clean --skip-publish --snapshot
+        run: goreleaser release --clean --snapshot
