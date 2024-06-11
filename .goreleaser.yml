@@ -20,6 +20,7 @@
             upx "{{ .Path }}"
           {{- end }}
 
+version: 2
 builds:
   - <<: *build_base
     id: uaws-cloudfront-create-invalidation
