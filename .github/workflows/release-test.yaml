@@ -14,11 +14,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
       - name: Install GoReleaser
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
           install-only: true
       - name: Run GoReleaser
-        run: goreleaser release --clean --skip-publish --snapshot
+        run: goreleaser release --clean --snapshot
