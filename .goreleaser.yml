@@ -39,11 +39,11 @@ builds:
     main: ./cmd/uaws-ssm-get-parameter/
     binary: uaws-ssm-get-parameter
 archives:
-  - builds:
+  - ids:
       - uaws-cloudfront-create-invalidation
       - uaws-ecr-get-login-password
       - uaws-s3-sync
       - uaws-ssm-get-parameter
-    format: binary
+    formats: binary
 checksum:
   name_template: 'checksums.txt'
