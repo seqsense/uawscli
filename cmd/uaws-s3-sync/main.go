@@ -1,14 +1,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/seqsense/s3sync"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/seqsense/s3sync/v2"
 )
 
 func main() {
@@ -33,13 +34,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	var cfg []*aws.Config
+	var cfgOpts []func(*config.LoadOptions) error
 	if *noSign {
-		cfg = []*aws.Config{{Credentials: credentials.AnonymousCredentials}}
+		cfgOpts = append(cfgOpts, config.WithCredentialsProvider(&aws.AnonymousCredentials{}))
 	}
-	sess, err := session.NewSession(cfg...)
+
+	ctx := context.Background()
+	cfg, err := config.LoadDefaultConfig(ctx, cfgOpts...)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: failed to create session: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error: failed to create config: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -51,7 +54,7 @@ func main() {
 		opts = append(opts, s3sync.WithDryRun())
 	}
 	if *acl != "" {
-		opts = append(opts, s3sync.WithACL(*acl))
+		opts = append(opts, s3sync.WithACL(types.ObjectCannedACL(*acl)))
 	}
 	if *contentType != "" {
 		opts = append(opts, s3sync.WithContentType(*contentType))
@@ -60,7 +63,7 @@ func main() {
 		opts = append(opts, s3sync.WithoutGuessMimeType())
 	}
 
-	err = s3sync.New(sess, opts...).Sync(flag.Arg(0), flag.Arg(1))
+	err = s3sync.New(cfg, opts...).Sync(ctx, flag.Arg(0), flag.Arg(1))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
