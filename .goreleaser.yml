@@ -14,11 +14,13 @@
     hooks:
       post:
         - |
-          {{ if and (eq .Os "windows") (eq .Arch "arm64") -}}
+          {{- if and (eq .Os "windows") (eq .Arch "arm64") -}}
             echo "Skipped on windows-arm64"
+          {{- else if eq .Os "darwin" -}}
+            echo "Skipped on darwin"
           {{- else -}}
             upx "{{ .Path }}"
-          {{- end }}
+          {{- end -}}
 
 version: 2
 builds:
@@ -39,11 +41,11 @@ builds:
     main: ./cmd/uaws-ssm-get-parameter/
     binary: uaws-ssm-get-parameter
 archives:
-  - builds:
+  - ids:
       - uaws-cloudfront-create-invalidation
       - uaws-ecr-get-login-password
       - uaws-s3-sync
       - uaws-ssm-get-parameter
-    format: binary
+    formats: binary
 checksum:
   name_template: 'checksums.txt'
